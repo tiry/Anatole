@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.nuxeo.anatole.listeners">
+
+  <extension target="org.nuxeo.ecm.core.event.EventServiceComponent"
+    point="listener">
+
+    <listener name="checkPagesStructureListener" async="false"
+      postCommit="false" class="org.nuxeo.anatole.listener.CheckPagesStructureListener"
+      priority="1">
+      <event>checkPagesStructure</event>
+    </listener>
+
+  </extension>
+
+</component>

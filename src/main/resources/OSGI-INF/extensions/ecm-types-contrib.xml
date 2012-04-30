@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<component name="org.nuxeo.anatole.types.web">
+
+  <require>org.nuxeo.ecm.platform.types</require>
+
+  <extension target="org.nuxeo.ecm.platform.types.TypeService" point="types">
+
+    <type id="Page">
+      <label>Page</label>
+      <icon>/icons/folder.gif</icon>
+      <bigIcon>/icons/folder_100.png</bigIcon>
+      <icon-expanded>/icons/folder_open.gif</icon-expanded>
+      <category>Collaborative</category>
+      <description>Page</description>
+      <default-view>view_documents</default-view>
+      <subtypes>
+        <type>Section</type>
+      </subtypes>
+      <layouts mode="any">
+        <layout>heading</layout>
+      </layouts>
+      <layouts mode="edit">
+        <layout>heading</layout>
+        <layout>dublincore</layout>
+      </layouts>
+      <contentViews category="content">
+        <contentView>section_content</contentView>
+      </contentViews>
+      <contentViews category="trash_content">
+        <contentView showInExportView="false">
+          document_trash_content
+        </contentView>
+      </contentViews>
+    </type>
+
+
+    <type id="Article">
+      <label>Article</label>
+      <icon>/icons/article.gif</icon>
+      <bigIcon>/icons/article_100.png</bigIcon>
+      <category>SimpleDocument</category>
+      <description>Article</description>
+      <default-view>view_documents</default-view>
+      <layouts mode="any">
+        <layout>heading</layout>
+        <layout>note</layout>
+      </layouts>
+      <layouts mode="summary">
+        <layout>article_summary_layout</layout>
+      </layouts>
+      <layouts mode="edit">
+        <layout>heading</layout>
+        <layout>note</layout>
+        <layout>dublincore</layout>
+      </layouts>
+      <layouts mode="view">
+        <layout>note</layout>
+      </layouts>
+    </type>
+
+    <type id="AnatoleWorkspace">
+      <label>AnatoleWorkspace</label>
+      <icon>/icons/workspace.gif</icon>
+      <bigIcon>/icons/workspace_100.png</bigIcon>
+      <icon-expanded>/icons/workspace_open.gif</icon-expanded>
+      <category>Collaborative</category>
+      <description>Workspace.description</description>
+      <default-view>view_documents</default-view>
+      <create-view>create_workspace</create-view>
+      <subtypes>
+        <type>Article</type>
+        <type>File</type>
+      </subtypes>
+      <layouts mode="any">
+        <layout>heading</layout>
+      </layouts>
+      <layouts mode="edit">
+        <layout>heading</layout>
+        <layout>dublincore</layout>
+      </layouts>
+      <contentViews category="content">
+        <contentView>document_content</contentView>
+      </contentViews>
+      <contentViews category="trash_content">
+        <contentView showInExportView="false">
+          document_trash_content
+        </contentView>
+      </contentViews>
+    </type>
+
+
+  </extension>
+</component>

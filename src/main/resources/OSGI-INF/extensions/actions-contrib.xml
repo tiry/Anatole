@@ -1,0 +1,21 @@
+<component name="org.nuxeo.anatole.actions">
+
+  <require>org.nuxeo.ecm.platform.actions</require>
+
+  <extension target="org.nuxeo.ecm.platform.actions.ActionService"
+    point="actions">
+
+    <action id="newArticle" link="#{documentActions.createDocument('Article')}"
+      label="command.create.section" icon="/icons/action_add.gif">
+      <category>SUBVIEW_UPPER_LIST</category>
+      <filter id="newArticle">
+        <rule grant="true">
+          <permission>AddChildren</permission>
+          <type>AnatoleWorkspace</type>
+        </rule>
+      </filter>
+    </action>
+
+  </extension>
+
+</component>

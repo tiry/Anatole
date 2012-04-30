@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<component name="org.nuxeo.anatole.adapters">
+
+  <extension target="org.nuxeo.ecm.core.api.DocumentAdapterService" point="adapters">
+
+    <adapter class="org.nuxeo.anatole.adapter.Article"
+      factory="org.nuxeo.anatole.adapter.AdapterFactory" />
+
+    <adapter class="org.nuxeo.anatole.adapter.Page"
+      factory="org.nuxeo.anatole.adapter.AdapterFactory" />
+
+  </extension>
+
+</component>
