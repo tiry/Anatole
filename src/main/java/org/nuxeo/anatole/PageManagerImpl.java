@@ -27,18 +27,6 @@ import org.osgi.framework.Bundle;
  */
 public class PageManagerImpl extends DefaultComponent implements PageManager {
 
-    public static final int MAX_DAYS_KEPT_LIVE = 10;
-
-    public static final int MAX_DAYS_FUTURE = 10;
-
-    public static final String PAGE_ROOT_TYPE = "SectionRoot";
-
-    public static final String PAGE_CONTAINER_TYPE = "Section";
-
-    public static final String LIVE_CONTAINER_NAME = "lives";
-
-    public static final String ARCHIVES_CONTAINER_NAME = "archives";
-
     protected Bundle bundle;
 
     public Bundle getBundle() {
@@ -62,7 +50,7 @@ public class PageManagerImpl extends DefaultComponent implements PageManager {
 
     protected Calendar getMaxDate() {
         Calendar max = new GregorianCalendar();
-        max.add(Calendar.DAY_OF_MONTH, -MAX_DAYS_KEPT_LIVE - 1);
+        max.add(Calendar.DAY_OF_MONTH, -Constants.MAX_DAYS_KEPT_LIVE - 1);
         return max;
     }
 
@@ -72,7 +60,7 @@ public class PageManagerImpl extends DefaultComponent implements PageManager {
 
     protected DocumentModel getRoot(CoreSession session) throws ClientException {
         DocumentModelList docs = session.query("select * from "
-                + PAGE_ROOT_TYPE);
+                + Constants.PAGE_ROOT_TYPE);
         if (docs.size() > 0) {
             return docs.get(0);
         }
@@ -86,7 +74,7 @@ public class PageManagerImpl extends DefaultComponent implements PageManager {
             return null;
         }
         Path path = root.getPath();
-        path = path.append(LIVE_CONTAINER_NAME);
+        path = path.append(Constants.LIVE_CONTAINER_NAME);
 
         PathRef ref = new PathRef(path.toString());
         if (session.exists(ref)) {
@@ -95,8 +83,8 @@ public class PageManagerImpl extends DefaultComponent implements PageManager {
             if (session.hasPermission(root.getRef(),
                     SecurityConstants.ADD_CHILDREN)) {
                 DocumentModel doc = session.createDocumentModel(
-                        root.getPathAsString(), LIVE_CONTAINER_NAME,
-                        PAGE_CONTAINER_TYPE);
+                        root.getPathAsString(), Constants.LIVE_CONTAINER_NAME,
+                        Constants.PAGE_CONTAINER_TYPE);
                 doc.setPropertyValue("dc:title", "Live pages");
                 return session.createDocument(doc);
             }
@@ -111,7 +99,7 @@ public class PageManagerImpl extends DefaultComponent implements PageManager {
             return null;
         }
         Path path = root.getPath();
-        path = path.append(ARCHIVES_CONTAINER_NAME);
+        path = path.append(Constants.ARCHIVES_CONTAINER_NAME);
 
         PathRef ref = new PathRef(path.toString());
         if (session.exists(ref)) {
@@ -120,8 +108,8 @@ public class PageManagerImpl extends DefaultComponent implements PageManager {
             if (session.hasPermission(root.getRef(),
                     SecurityConstants.ADD_CHILDREN)) {
                 DocumentModel doc = session.createDocumentModel(
-                        root.getPathAsString(), LIVE_CONTAINER_NAME,
-                        PAGE_CONTAINER_TYPE);
+                        root.getPathAsString(), Constants.LIVE_CONTAINER_NAME,
+                        Constants.PAGE_CONTAINER_TYPE);
                 doc.setPropertyValue("dc:title", "Archived Pages");
                 return session.createDocument(doc);
             }
@@ -187,7 +175,7 @@ public class PageManagerImpl extends DefaultComponent implements PageManager {
             throw new ClientException(e);
         }
         // Create new pages if needed
-        for (int i = -MAX_DAYS_KEPT_LIVE; i <= MAX_DAYS_FUTURE; i++) {
+        for (int i = -Constants.MAX_DAYS_KEPT_LIVE; i <= Constants.MAX_DAYS_FUTURE; i++) {
             Calendar date = Calendar.getInstance();
             date.add(Calendar.DAY_OF_YEAR, i);
             getPage(session, date, true);

@@ -11,6 +11,13 @@
   <name>Anatole</name>
   <description />
   <dependencies>
+    <!-- Add dependecy on Studio project -->
+    <dependency>
+      <groupId>nuxeo-studio</groupId>
+      <artifactId>AlmanachAnatole</artifactId>
+      <version>0.0.5</version>
+    </dependency>
+    <!-- Standard Nuxeo dependencies -->
     <dependency>
       <groupId>org.nuxeo.common</groupId>
       <artifactId>nuxeo-common</artifactId>
@@ -51,6 +58,32 @@
       <groupId>org.nuxeo.ecm.platform</groupId>
       <artifactId>nuxeo-platform-content-template-manager</artifactId>
     </dependency>
+    <!-- JAXRS / WebEngine -->
+    <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>jsr311-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.nuxeo.ecm.webengine</groupId>
+      <artifactId>nuxeo-webengine-jaxrs</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.nuxeo.ecm.webengine</groupId>
+      <artifactId>nuxeo-webengine-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.nuxeo.ecm.automation</groupId>
+      <artifactId>nuxeo-automation-server</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-core-asl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-mapper-asl</artifactId>
+    </dependency>
+    <!-- JSF / WebLayer deps -->
     <dependency>
       <groupId>org.jboss.seam</groupId>
       <artifactId>jboss-seam</artifactId>
@@ -68,4 +101,25 @@
       <artifactId>nuxeo-platform-webapp-base</artifactId>
     </dependency>
   </dependencies>
+
+  <repositories>
+    <!-- declare Studio repository -->
+    <repository>
+      <id>nuxeo-studio</id>
+      <url>https://connect.nuxeo.com/nuxeo/site/studio/maven</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <!-- <repository> <id>public</id> <url>http://maven.nuxeo.org/public</url>
+      <releases> <enabled>true</enabled> </releases> <snapshots> <enabled>false</enabled>
+      </snapshots> </repository> <repository> <id>public-snapshot</id> <url>http://maven.nuxeo.org/public-snapshot</url>
+      <releases> <enabled>false</enabled> </releases> <snapshots> <enabled>false</enabled>
+      <updatePolicy>daily</updatePolicy> </snapshots> </repository> -->
+
+  </repositories>
+
 </project>

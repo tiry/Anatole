@@ -4,17 +4,14 @@ Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Bundle-Version: 1.0
 Bundle-Name: Anatole
-Nuxeo-Component: OSGI-INF/extensions/types-contrib.xml,
- OSGI-INF/extensions/content-template-contrib.xml,
+Nuxeo-Component: OSGI-INF/extensions/content-template-contrib.xml,
  OSGI-INF/extensions/scheduler-contrib.xml,
  OSGI-INF/extensions/listeners-contrib.xml,
- OSGI-INF/extensions/types-contrib.xml,
  OSGI-INF/extensions/pagemanager-service.xml,
  OSGI-INF/extensions/adapter-contrib.xml, 
- OSGI-INF/extensions/layouts-contrib.xml, 
- OSGI-INF/extensions/ecm-types-contrib.xml,
  OSGI-INF/extensions/actions-contrib.xml  
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: Anatole
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Nuxeo-WebModule: org.nuxeo.anatole.rest.JAXRSAnatoleApplication;name=Anatole
 

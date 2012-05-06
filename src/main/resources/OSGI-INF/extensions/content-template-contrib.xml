@@ -25,25 +25,17 @@
       targetType="Domain">
       <template>
         <templateItem typeName="WorkspaceRoot" id="workspaces"
-          title="Workspaces" />
-        <templateItem typeName="SectionRoot" id="sections"
           title="Pages" />
-      </template>
-    </factoryBinding>
-
-    <factoryBinding name="SectionRootFactory" factoryName="SimpleTemplateFactory"
-      targetType="SectionRoot">
-      <template>
-        <templateItem typeName="Section" id="lives" title="Live" />
-        <templateItem typeName="Section" id="archives" title="Archives" />
+        <templateItem typeName="SectionRoot" id="sections"
+          title="Sections" />
       </template>
     </factoryBinding>
 
     <factoryBinding name="WorkspaceRootFactory" factoryName="SimpleTemplateFactory"
       targetType="WorkspaceRoot">
       <template>
-        <templateItem typeName="AnatoleWorkspace" id="space1" title="Espace 1" />
-        <templateItem typeName="AnatoleWorkspace" id="space2" title="Espace 2" />
+        <templateItem typeName="Workspace" id="lives" title="Live" />
+        <templateItem typeName="Workspace" id="archives" title="Archives" />
       </template>
     </factoryBinding>
 

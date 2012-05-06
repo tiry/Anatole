@@ -5,9 +5,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.nuxeo.anatole.Constants;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -16,8 +18,6 @@ import org.nuxeo.ecm.core.api.DocumentModelList;
 public class PageAdapter implements Serializable, Page {
 
     private static final long serialVersionUID = 1L;
-
-    public static final String PAGE_TYPE = "Page";
 
     public static final String PAGE_DATE_PROP = "page:targetDate";
 
@@ -66,7 +66,7 @@ public class PageAdapter implements Serializable, Page {
             Calendar date) throws ClientException {
         String key = format(date);
         DocumentModel doc = session.createDocumentModel(parentPath, key,
-                PAGE_TYPE);
+                Constants.PAGE_TYPE);
         doc.setPropertyValue("dc:title", key);
         doc.setPropertyValue(PAGE_DATE_PROP, key);
         return session.createDocument(doc).getAdapter(Page.class);
@@ -75,9 +75,14 @@ public class PageAdapter implements Serializable, Page {
     public static Page find(CoreSession session, Calendar date)
             throws ClientException {
         String key = format(date);
+        return find(session, key);
+    }
+
+    public static Page find(CoreSession session, String date)
+            throws ClientException {
         DocumentModelList docs = session.query("select * from "
-                + PageAdapter.PAGE_TYPE + " where "
-                + PageAdapter.PAGE_DATE_PROP + "='" + key + "'");
+                + Constants.PAGE_TYPE + " where " + PageAdapter.PAGE_DATE_PROP
+                + "='" + date + "'");
         if (docs.size() > 0) {
             return docs.get(0).getAdapter(Page.class);
         }
@@ -95,6 +100,11 @@ public class PageAdapter implements Serializable, Page {
             return doc.getId().equals(((PageAdapter) obj).doc.getId());
         }
         return super.equals(obj);
+    }
+
+    @Override
+    public DocumentModelList getArticles() throws ClientException {
+        return doc.getCoreSession().getChildren(doc.getRef());
     }
 
 }

@@ -10,6 +10,12 @@
       <event>checkPagesStructure</event>
     </listener>
 
+    <listener name="titleInitializerListener" async="false"
+      postCommit="false" class="org.nuxeo.anatole.listener.TitleInitializerListener"
+      priority="1">
+      <event>aboutToCreate</event>
+    </listener>
+
   </extension>
 
 </component>
