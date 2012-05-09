@@ -20,7 +20,7 @@ import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.storage.sql.SQLRepositoryTestCase;
 import org.nuxeo.runtime.api.Framework;
 
-public class PagesManagerTests
+public class PagesManagerTest
     extends SQLRepositoryTestCase
 {
 
