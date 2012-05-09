@@ -15,7 +15,7 @@
     <dependency>
       <groupId>nuxeo-studio</groupId>
       <artifactId>AlmanachAnatole</artifactId>
-      <version>0.0.6</version>
+      <version>0.0.7</version>
     </dependency>
     <!-- Standard Nuxeo dependencies -->
     <dependency>
@@ -111,7 +111,7 @@
         <enabled>true</enabled>
       </releases>
       <snapshots>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
       </snapshots>
     </repository>
     <repository>
