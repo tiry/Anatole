@@ -1,6 +1,7 @@
 package org.nuxeo.anatole.rest;
 
 import java.io.ByteArrayOutputStream;
+import java.io.StringWriter;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -8,7 +9,9 @@ import javax.ws.rs.PathParam;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.nuxeo.anatole.Constants;
+import org.nuxeo.anatole.adapter.AlmanachDay;
 import org.nuxeo.anatole.adapter.Page;
 import org.nuxeo.anatole.adapter.PageAdapter;
 import org.nuxeo.ecm.automation.server.jaxrs.io.writers.JsonDocumentListWriter;
@@ -38,6 +41,33 @@ public class RootResource
   }
 
   @GET
+  @Path("{oldDate}")
+  public String getOldPage(@PathParam(value = "date")
+  String date)
+      throws Exception
+  {
+    Page page = PageAdapter.find(getContext().getCoreSession(), date);
+    if (page != null)
+    {
+      final AlmanachDay almanachDay = page.getDocument().getAdapter(AlmanachDay.class);
+      DocumentModelList articles = page.getArticles();
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+      final JsonGenerator jsonGenerator = new JsonFactory().createJsonGenerator(out);
+      jsonGenerator.writeStartObject();
+      jsonGenerator.writeFieldName("day");
+      jsonGenerator.writeObject(almanachDay);
+      JsonDocumentWriter.writeDocument(jsonGenerator, page.getDocument(), new String[] { Constants.PAGE_TYPE });
+      jsonGenerator.writeFieldName("sections");
+      JsonDocumentListWriter.writeDocuments(jsonGenerator, articles, schemas);
+      jsonGenerator.writeEndObject();
+      jsonGenerator.close();
+      return new String(out.toByteArray());
+    }
+    return "not-found";
+  }
+
+  @GET
   @Path("{date}")
   public String getPage(@PathParam(value = "date")
   String date)
@@ -46,18 +76,17 @@ public class RootResource
     Page page = PageAdapter.find(getContext().getCoreSession(), date);
     if (page != null)
     {
-      // yerk : should do better !!!
+      final AlmanachDay almanachDay = page.getDocument().getAdapter(AlmanachDay.class);
       DocumentModelList articles = page.getArticles();
-      ByteArrayOutputStream out = new ByteArrayOutputStream();
-      final JsonGenerator jsonGenerator = new JsonFactory().createJsonGenerator(out);
-      jsonGenerator.writeStartObject();
-      jsonGenerator.writeFieldName("day");
-      JsonDocumentWriter.writeDocument(jsonGenerator, page.getDocument(), new String[] { Constants.PAGE_TYPE });
+
+      final ObjectMapper objectMapper = new ObjectMapper();
+      final JsonFactory jsonFactory = new JsonFactory();
+      final StringWriter writer = new StringWriter();
+      final JsonGenerator jsonGenerator = jsonFactory.createJsonGenerator(writer);
+      objectMapper.writeValue(jsonGenerator, almanachDay);
       jsonGenerator.writeFieldName("sections");
       JsonDocumentListWriter.writeDocuments(jsonGenerator, articles, schemas);
-      jsonGenerator.writeEndObject();
-      jsonGenerator.close();
-      return new String(out.toByteArray());
+      return writer.toString();
     }
     return "not-found";
   }
