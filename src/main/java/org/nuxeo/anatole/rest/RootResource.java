@@ -42,30 +42,30 @@ public class RootResource
 
   // @GET
   // @Path("{oldDate}")
-  // public String getOldPage(@PathParam(value = "date")
-  // String date)
-  // throws Exception
-  // {
-  // Page page = PageAdapter.find(getContext().getCoreSession(), date);
-  // if (page != null)
-  // {
-  // final AlmanachDay almanachDay = page.getDocument().getAdapter(AlmanachDay.class);
-  // DocumentModelList articles = page.getArticles();
-  // ByteArrayOutputStream out = new ByteArrayOutputStream();
-  //
-  // final JsonGenerator jsonGenerator = new JsonFactory().createJsonGenerator(out);
-  // jsonGenerator.writeStartObject();
-  // jsonGenerator.writeFieldName("day");
-  // jsonGenerator.writeObject(almanachDay);
-  // JsonDocumentWriter.writeDocument(jsonGenerator, page.getDocument(), new String[] { Constants.PAGE_TYPE });
-  // jsonGenerator.writeFieldName("sections");
-  // JsonDocumentListWriter.writeDocuments(jsonGenerator, articles, schemas);
-  // jsonGenerator.writeEndObject();
-  // jsonGenerator.close();
-  // return new String(out.toByteArray());
-  // }
-  // return "not-found";
-  // }
+  @Deprecated
+  public String getOldPage(@PathParam(value = "date") String date)
+      throws Exception
+  {
+    Page page = PageAdapter.find(getContext().getCoreSession(), date);
+    if (page != null)
+    {
+      final AlmanachDay almanachDay = page.getDocument().getAdapter(AlmanachDay.class);
+      DocumentModelList articles = page.getArticles();
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+      final JsonGenerator jsonGenerator = new JsonFactory().createJsonGenerator(out);
+      jsonGenerator.writeStartObject();
+      jsonGenerator.writeFieldName("day");
+      jsonGenerator.writeObject(almanachDay);
+      JsonDocumentWriter.writeDocument(jsonGenerator, page.getDocument(), new String[] { Constants.PAGE_TYPE });
+      jsonGenerator.writeFieldName("sections");
+      JsonDocumentListWriter.writeDocuments(jsonGenerator, articles, schemas);
+      jsonGenerator.writeEndObject();
+      jsonGenerator.close();
+      return new String(out.toByteArray());
+    }
+    return "not-found";
+  }
 
   @GET
   @Path("{date}")

@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.nuxeo.anatole.Constants;
 import org.nuxeo.anatole.adapter.AlmanachSection.ALaUneSection;
 import org.nuxeo.anatole.adapter.AlmanachSection.AlmanachLink;
+import org.nuxeo.anatole.adapter.AlmanachSection.Challenge;
 import org.nuxeo.anatole.adapter.AlmanachSection.SectionType;
+import org.nuxeo.anatole.adapter.AlmanachSection.TodaysChallengeSection;
 import org.nuxeo.anatole.adapter.AlmanachSection.WhosThatPersonSection;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.adapter.DocumentAdapterFactory;
@@ -29,30 +32,33 @@ public class AdapterFactory
 
     if (adapterClass == AlmanachSection.class)
     {
-      String title;
-      String text;
-      String illustrationUrl;
+      String title = null;
+      String text = null;
+      String illustrationUrl = null;
       final List<AlmanachLink> links = new ArrayList<AlmanachLink>();
-      try
+      if (document.getType().equals(Constants.TODAYS_CHALLENGE_TYPE) == false)
       {
-        title = (String) document.getPropertyValue("dc:title");
-        text = (String) document.getPropertyValue("as:text");
-        final AbstractBlob abstractBlob = (AbstractBlob) document.getPropertyValue("as:illustration");
-        illustrationUrl = abstractBlob == null ? null : abstractBlob.getFilename();
-        @SuppressWarnings("unchecked")
-        final List<HashMap<String, String>> linksAs = (List<HashMap<String, String>>) document.getPropertyValue("as:links");
-        for (HashMap<String, String> map : linksAs)
+        try
         {
-          links.add(new AlmanachLink(map.get("label"), map.get("url")));
+          title = (String) document.getPropertyValue("dc:title");
+          text = (String) document.getPropertyValue("as:text");
+          final AbstractBlob abstractBlob = (AbstractBlob) document.getPropertyValue("as:illustration");
+          illustrationUrl = abstractBlob == null ? null : abstractBlob.getFilename();
+          @SuppressWarnings("unchecked")
+          final List<HashMap<String, String>> innerList = (List<HashMap<String, String>>) document.getPropertyValue("as:links");
+          for (HashMap<String, String> map : innerList)
+          {
+            links.add(new AlmanachLink(map.get("label"), map.get("url")));
+          }
         }
-      }
-      catch (Exception exception)
-      {
-        // TODO: handle each property exception
-        exception.printStackTrace();
-        title = null;
-        text = null;
-        illustrationUrl = null;
+        catch (Exception exception)
+        {
+          // TODO: handle each property exception
+          exception.printStackTrace();
+          title = null;
+          text = null;
+          illustrationUrl = null;
+        }
       }
       if (document.getType().equals(Constants.ALAUNE_TYPE) == true)
       {
@@ -77,7 +83,48 @@ public class AdapterFactory
       }
       else if (document.getType().equals(Constants.TODAYS_CHALLENGE_TYPE) == true)
       {
-        return new AlmanachSection(SectionType.TodaysChallenge, title, text, illustrationUrl, links);
+        final List<Challenge> challenges = new ArrayList<Challenge>();
+        try
+        {
+          @SuppressWarnings("unchecked")
+          final List<HashMap<String, ?>> innerList = (List<HashMap<String, ?>>) document.getPropertyValue("todaysChallenge:challenge");
+          for (HashMap<String, ?> object : innerList)
+          {
+            String question = null;
+            int answerIndex = -1;
+            String answerLabel = null;
+            final List<String> possibleAnswers = new ArrayList<String>();
+            for (Entry<String, ?> entry : object.entrySet())
+            {
+              if (entry.getKey().equals("question") == true)
+              {
+                question = (String) entry.getValue();
+              }
+              else if (entry.getKey().equals("answerIndex") == true)
+              {
+                answerIndex = ((Long) entry.getValue()).intValue();
+              }
+              else if (entry.getKey().equals("possibleAnswers") == true)
+              {
+                final String[] strings = (String[]) entry.getValue();
+                for (String string : strings)
+                {
+                  possibleAnswers.add(string);
+                }
+              }
+              else if (entry.getKey().equals("answerLabel") == true)
+              {
+                answerLabel = (String) entry.getValue();
+              }
+            }
+            challenges.add(new Challenge(question, possibleAnswers, answerIndex, answerLabel));
+          }
+        }
+        catch (Exception exception)
+        {
+          exception.printStackTrace();
+        }
+        return new TodaysChallengeSection(challenges);
       }
       else if (document.getType().equals(Constants.TODAYS_CHALLENGE_TYPE) == true)
       {

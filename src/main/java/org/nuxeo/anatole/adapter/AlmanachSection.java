@@ -51,6 +51,47 @@ public class AlmanachSection
 
   }
 
+  public final static class Challenge
+      implements Serializable
+  {
+
+    private static final long serialVersionUID = -9202437493180078842L;
+
+    public final String question;
+
+    public final List<String> possibleAnswers;
+
+    public final int answerIndex;
+
+    public final String answerLabel;
+
+    public Challenge(String question, List<String> possibleAnswers, int answerIndex, String answerLabel)
+    {
+      super();
+      this.question = question;
+      this.possibleAnswers = possibleAnswers;
+      this.answerIndex = answerIndex;
+      this.answerLabel = answerLabel;
+    }
+
+  }
+
+  public final static class TodaysChallengeSection
+      extends AlmanachSection
+  {
+
+    private static final long serialVersionUID = -8060324417910730655L;
+
+    public final List<Challenge> challenges;
+
+    public TodaysChallengeSection(List<Challenge> challenges)
+    {
+      super(SectionType.TodaysChallenge, null, null, null, null);
+      this.challenges = challenges;
+    }
+
+  }
+
   public final static class WhosThatPersonSection
       extends AlmanachSection
   {
