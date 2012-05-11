@@ -18,12 +18,34 @@ public final class AlmanachDay
 
   public final String when;
 
+  public final String sunRise;
+
+  public final String sunSet;
+
+  public final String moonRise;
+
+  public final String moonSet;
+
+  public final String astrology;
+
+  public final String republicanCalendar;
+
+  public final String saint;
+
   public final List<AlmanachSection> sections;
 
-  public AlmanachDay(Date date, String when, List<AlmanachSection> sections)
+  public AlmanachDay(Date date, String when, String sunRise, String sunSet, String moonRise, String moonSet, String astrology, String republicanCalendar,
+      String saint, List<AlmanachSection> sections)
   {
     this.date = date;
     this.when = when;
+    this.sunRise = sunRise;
+    this.sunSet = sunSet;
+    this.moonRise = moonRise;
+    this.moonSet = moonSet;
+    this.astrology = astrology;
+    this.republicanCalendar = republicanCalendar;
+    this.saint = saint;
     this.sections = sections;
   }
 
