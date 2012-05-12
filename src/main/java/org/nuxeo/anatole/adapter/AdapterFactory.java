@@ -73,6 +73,10 @@ public class AdapterFactory
         }
         return new ALaUneSection(title, text, illustrationUrl, links, calendar == null ? null : calendar.getTime());
       }
+      else if (document.getType().equals(Constants.ANATOLE_AT_THE_MARKET_TYPE) == true)
+      {
+        return new AlmanachSection(SectionType.AnatoleAtTheMarket, title, text, illustrationUrl, links);
+      }
       else if (document.getType().equals(Constants.ANATOLE_FRANCE_TOUR_TYPE) == true)
       {
         return new AlmanachSection(SectionType.AnatoleFranceTour, title, text, illustrationUrl, links);
@@ -165,6 +169,12 @@ public class AdapterFactory
       {
         for (DocumentModel childDocument : page.getArticles())
         {
+          // TODO: ask if there is a constant for this workflow state
+          if (childDocument.getCurrentLifeCycleState().equals("deleted") == true)
+          {
+            // The document has been deleted
+            continue;
+          }
           final AlmanachSection almanachSection = childDocument.getAdapter(AlmanachSection.class);
           if (almanachSection != null)
           {

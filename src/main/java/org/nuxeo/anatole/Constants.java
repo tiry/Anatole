@@ -21,6 +21,8 @@ public final class Constants
 
   public static final String ALAUNE_TYPE = "alaune";
 
+  public static final String ANATOLE_AT_THE_MARKET_TYPE = "anatoleAtTheMarket";
+
   public static final String ANATOLE_FRANCE_TOUR_TYPE = "anatoleFranceTour";
 
   public static final String ANATOLES_AGENDA_TYPE = "anatolesAgenda";

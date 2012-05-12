@@ -27,13 +27,10 @@ public class TitleInitializerListener
       {
         DocumentEventContext documentEventContext = (DocumentEventContext) eventContext;
         DocumentModel document = documentEventContext.getSourceDocument();
-        if (Constants.PAGE_TYPE.equals(document.getType()) == true)
+        final String title = (String) document.getPropertyValue("dc:title");
+        if (title == null || title.isEmpty())
         {
-          final String title = (String) document.getPropertyValue("dc:title");
-          if (title == null || title.isEmpty())
-          {
-            setDefaultTitle(document);
-          }
+          setDefaultTitle(document);
         }
       }
     }
@@ -69,6 +66,10 @@ public class TitleInitializerListener
     if (document.getType().equals(Constants.ALAUNE_TYPE))
     {
       title = "À la une";
+    }
+    else if (document.getType().equals(Constants.ANATOLE_AT_THE_MARKET_TYPE))
+    {
+      title = "Anatole au marché";
     }
     else if (document.getType().equals(Constants.ANATOLE_FRANCE_TOUR_TYPE))
     {
