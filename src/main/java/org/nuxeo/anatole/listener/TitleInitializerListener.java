@@ -1,5 +1,9 @@
 package org.nuxeo.anatole.listener;
 
+import java.util.Calendar;
+
+import org.nuxeo.anatole.Constants;
+import org.nuxeo.anatole.adapter.PageAdapter;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.event.DocumentEventTypes;
@@ -18,57 +22,77 @@ public class TitleInitializerListener
   {
     if (DocumentEventTypes.ABOUT_TO_CREATE.equals(event.getName()))
     {
-      EventContext ctx = event.getContext();
-      if (ctx instanceof DocumentEventContext)
+      EventContext eventContext = event.getContext();
+      if (eventContext instanceof DocumentEventContext)
       {
-        DocumentEventContext docCtx = (DocumentEventContext) ctx;
-        DocumentModel doc = docCtx.getSourceDocument();
-        String title = (String) doc.getPropertyValue("dc:title");
-        if (title == null || title.isEmpty())
+        DocumentEventContext documentEventContext = (DocumentEventContext) eventContext;
+        DocumentModel document = documentEventContext.getSourceDocument();
+        if (Constants.PAGE_TYPE.equals(document.getType()) == true)
         {
-          setDefaultTitle(doc);
+          final String title = (String) document.getPropertyValue("dc:title");
+          if (title == null || title.isEmpty())
+          {
+            setDefaultTitle(document);
+          }
+        }
+      }
+    }
+    if (DocumentEventTypes.DOCUMENT_CREATED.equals(event.getName()) || DocumentEventTypes.DOCUMENT_UPDATED.equals(event.getName()))
+    {
+      EventContext eventContext = event.getContext();
+      if (eventContext instanceof DocumentEventContext)
+      {
+        DocumentEventContext documentEventContext = (DocumentEventContext) eventContext;
+        DocumentModel document = documentEventContext.getSourceDocument();
+        if (Constants.PAGE_TYPE.equals(document.getType()) == true)
+        {
+          final Calendar date = (Calendar) document.getPropertyValue(PageAdapter.ALMANACH_DAY);
+          if (date != null)
+          {
+            document.setPropertyValue(PageAdapter.PAGE_DATE_PROP, PageAdapter.format(date));
+          }
         }
       }
     }
   }
 
-  protected void setDefaultTitle(DocumentModel doc)
+  protected void setDefaultTitle(DocumentModel document)
       throws ClientException
   {
     String title = "";
-    if (doc.getType().equals("alaune"))
+    if (document.getType().equals(Constants.ALAUNE_TYPE))
     {
       title = "À la une";
     }
-    else if (doc.getType().equals("whatDoIDoToday"))
-    {
-      title = "Je fais quoi, aujourd'hui ?";
-    }
-    else if (doc.getType().equals("anatoleFranceTour"))
+    else if (document.getType().equals(Constants.ANATOLE_FRANCE_TOUR_TYPE))
     {
       title = "Le Tour de France d'Anatole";
     }
-    else if (doc.getType().equals("todaysChallenge"))
-    {
-      title = "Le défi du jour";
-    }
-    else if (doc.getType().equals("whosThatPerson"))
-    {
-      title = "Qui c'est celui-là ?";
-    }
-    else if (doc.getType().equals("whosThatPerson"))
-    {
-      title = "Qui c'est celui-là ?";
-    }
-    else if (doc.getType().equals("anatolesAgenda"))
+    else if (document.getType().equals(Constants.ANATOLES_AGENDA_TYPE))
     {
       title = "Les rendez-vous d'Anatole";
     }
-    else if (doc.getType().equals("anatolesIdeas"))
+    else if (document.getType().equals(Constants.ANATOLES_IDEAS_TYPE))
     {
       title = "Les idées d'Anatole";
     }
-    doc.setPropertyValue("dc:title", title);
+    // else if (doc.getType().equals(Constants.FREE_SECTION_TYPE))
+    // {
+    // title = "Section libre";
+    // }
+    else if (document.getType().equals(Constants.TODAYS_CHALLENGE_TYPE))
+    {
+      title = "Le défi du jour";
+    }
+    else if (document.getType().equals(Constants.WHAT_DO_ID_DO_TODAY_TYPE))
+    {
+      title = "Je fais quoi, aujourd'hui ?";
+    }
+    else if (document.getType().equals(Constants.WHOS_THAT_PERSON_TYPE))
+    {
+      title = "Qui c'est celui-là ?";
+    }
+    document.setPropertyValue("dc:title", title);
   }
 
 }

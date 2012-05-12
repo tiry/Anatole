@@ -5,7 +5,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.Test;
 import org.nuxeo.anatole.Constants;
@@ -15,6 +17,7 @@ import org.nuxeo.anatole.PublishInfo;
 import org.nuxeo.anatole.adapter.AlmanachDay;
 import org.nuxeo.anatole.adapter.Article;
 import org.nuxeo.anatole.adapter.Page;
+import org.nuxeo.anatole.adapter.PageAdapter;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.storage.sql.SQLRepositoryTestCase;
@@ -123,7 +126,6 @@ public class PagesManagerTest
   public void testPublishOptions()
       throws Exception
   {
-
     DocumentModel articleDoc = session.createDocumentModel("/", "article1", "Note");
     articleDoc.setPropertyValue("dc:title", "Test Article");
     articleDoc.setPropertyValue("note:note", "Some content");
@@ -195,11 +197,31 @@ public class PagesManagerTest
       final AlmanachDay almanachDay = page.getDocument().getAdapter(AlmanachDay.class);
       assertNotNull(almanachDay);
       assertEquals("The 'when' field is not OK", page.getDocument().getPropertyValue("almanachDay:when"), almanachDay.when);
-      assertEquals("The 'date' field is not OK", page.getDocument().getPropertyValue("almanachDay:date"), almanachDay.date);
+      assertEquals("The 'date' field is not OK", page.getDocument().getPropertyValue(PageAdapter.ALMANACH_DAY), almanachDay.date);
       assertNotNull("The 'sections' field is not OK", almanachDay.sections);
       assertEquals("The 'sections' field size is not OK", true, almanachDay.sections.size() >= 1);
-
     }
+  }
+
+  @Test
+  public void testAlmanchDayTargetDate()
+      throws Exception
+  {
+    PageManager pageManager = Framework.getLocalService(PageManager.class);
+    DocumentModel liveContainer = pageManager.getLiveContainer(session);
+    DocumentModel document = session.createDocumentModel(liveContainer.getPathAsString(), UUID.randomUUID().toString(), Constants.PAGE_TYPE);
+    document.setPropertyValue("dc:title", "A title");
+    final Calendar calendar = new GregorianCalendar();
+    document.setPropertyValue(PageAdapter.ALMANACH_DAY, calendar);
+    final DocumentModel newDocument = session.createDocument(document);
+    final String targetDate = (String) newDocument.getPropertyValue(PageAdapter.PAGE_DATE_PROP);
+    assertNotNull("The 'targetDate' has not been set automatically", targetDate);
+    assertEquals("The 'targetDate' field is not OK", PageAdapter.format(calendar), targetDate);
+
+    calendar.add(Calendar.MONTH, 1);
+    document.setPropertyValue(PageAdapter.ALMANACH_DAY, calendar);
+    final DocumentModel savedDocument = session.saveDocument(newDocument);
+    assertEquals("The 'targetDate' field is not OK", PageAdapter.format(calendar), (String) savedDocument.getPropertyValue(PageAdapter.PAGE_DATE_PROP));
   }
 
 }

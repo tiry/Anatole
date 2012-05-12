@@ -32,7 +32,7 @@ public class AlmanachSection
 
   public static enum SectionType
   {
-    ALaUne, AnatoleFranceTour, FreeSection, TodaysChallenge, WhatDoIDoToday, WhosThatPerson
+    ALaUne, AnatoleFranceTour, AnatolesAgenda, AnatolesIdeas, FreeSection, TodaysChallenge, WhatDoIDoToday, WhosThatPerson
   }
 
   public final static class ALaUneSection

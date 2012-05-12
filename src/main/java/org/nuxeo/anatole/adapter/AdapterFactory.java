@@ -77,6 +77,14 @@ public class AdapterFactory
       {
         return new AlmanachSection(SectionType.AnatoleFranceTour, title, text, illustrationUrl, links);
       }
+      else if (document.getType().equals(Constants.ANATOLES_AGENDA_TYPE) == true)
+      {
+        return new AlmanachSection(SectionType.AnatolesAgenda, title, text, illustrationUrl, links);
+      }
+      else if (document.getType().equals(Constants.ANATOLES_IDEAS_TYPE) == true)
+      {
+        return new AlmanachSection(SectionType.AnatolesIdeas, title, text, illustrationUrl, links);
+      }
       else if (document.getType().equals(Constants.FREE_SECTION_TYPE) == true)
       {
         return new AlmanachSection(SectionType.FreeSection, title, text, illustrationUrl, links);
@@ -87,7 +95,7 @@ public class AdapterFactory
         try
         {
           @SuppressWarnings("unchecked")
-          final List<HashMap<String, ?>> innerList = (List<HashMap<String, ?>>) document.getPropertyValue("todaysChallenge:challenge");
+          final List<HashMap<String, ?>> innerList = (List<HashMap<String, ?>>) document.getPropertyValue("todaysChallenge:challenges");
           for (HashMap<String, ?> object : innerList)
           {
             String question = null;
@@ -163,7 +171,7 @@ public class AdapterFactory
             almanachSections.add(almanachSection);
           }
         }
-        final Calendar date = (Calendar) document.getPropertyValue("almanachDay:date");
+        final Calendar date = (Calendar) document.getPropertyValue(PageAdapter.ALMANACH_DAY);
         return new AlmanachDay(date == null ? null : date.getTime(), (String) document.getPropertyValue("almanachDay:when"), (String) document.getPropertyValue("almanachDay:sunRise"), (String) document.getPropertyValue("almanachDay:sunSet"), (String) document.getPropertyValue("almanachDay:moonRise"), (String) document.getPropertyValue("almanachDay:moonSet"), (String) document.getPropertyValue("almanachDay:astrology"), (String) document.getPropertyValue("almanachDay:republicanCalendar"), (String) document.getPropertyValue("almanachDay:saint"), almanachSections);
       }
       catch (Exception exception)

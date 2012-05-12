@@ -23,11 +23,16 @@ public final class Constants
 
   public static final String ANATOLE_FRANCE_TOUR_TYPE = "anatoleFranceTour";
 
+  public static final String ANATOLES_AGENDA_TYPE = "anatolesAgenda";
+
+  public static final String ANATOLES_IDEAS_TYPE = "anatolesIdeas";
+
   public static final String FREE_SECTION_TYPE = "freeSection";
 
   public static final String TODAYS_CHALLENGE_TYPE = "todaysChallenge";
 
   public static final String WHAT_DO_ID_DO_TODAY_TYPE = "whatDoIDoToday";
+
   public static final String WHOS_THAT_PERSON_TYPE = "whosThatPerson";
 
 }
