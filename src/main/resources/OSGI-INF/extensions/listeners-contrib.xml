@@ -25,7 +25,7 @@
     >
       <event>aboutToCreate</event>
       <event>documentCreated</event>
-      <event>documentModified</event>
+      <event>beforeDocumentModification</event>
     </listener>
 
   </extension>

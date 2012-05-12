@@ -37,7 +37,7 @@ public class TitleInitializerListener
         }
       }
     }
-    if (DocumentEventTypes.DOCUMENT_CREATED.equals(event.getName()) || DocumentEventTypes.DOCUMENT_UPDATED.equals(event.getName()))
+    if (DocumentEventTypes.DOCUMENT_CREATED.equals(event.getName()) || DocumentEventTypes.BEFORE_DOC_UPDATE.equals(event.getName()))
     {
       EventContext eventContext = event.getContext();
       if (eventContext instanceof DocumentEventContext)
@@ -49,7 +49,13 @@ public class TitleInitializerListener
           final Calendar date = (Calendar) document.getPropertyValue(PageAdapter.ALMANACH_DAY);
           if (date != null)
           {
+            System.out.println("Modifying the '" + PageAdapter.PAGE_DATE_PROP + "' from the '" + PageAdapter.ALMANACH_DAY + "' field with value " + date.getTime());
             document.setPropertyValue(PageAdapter.PAGE_DATE_PROP, PageAdapter.format(date));
+            // if (DocumentEventTypes.DOCUMENT_UPDATED.equals(event.getName()))
+            // {
+            // final CoreSession session = document.getCoreSession();
+            // session.saveDocument(document);
+            // }
           }
         }
       }
