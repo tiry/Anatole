@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import org.nuxeo.anatole.Constants;
 import org.nuxeo.anatole.adapter.AlmanachSection.ALaUneSection;
 import org.nuxeo.anatole.adapter.AlmanachSection.AlmanachLink;
+import org.nuxeo.anatole.adapter.AlmanachSection.AnatolesAgenda;
 import org.nuxeo.anatole.adapter.AlmanachSection.Challenge;
 import org.nuxeo.anatole.adapter.AlmanachSection.SectionType;
 import org.nuxeo.anatole.adapter.AlmanachSection.TodaysChallengeSection;
@@ -83,7 +84,16 @@ public class AdapterFactory
       }
       else if (document.getType().equals(Constants.ANATOLES_AGENDA_TYPE) == true)
       {
-        return new AlmanachSection(SectionType.AnatolesAgenda, title, text, illustrationUrl, links);
+        String subTitle = null;
+        try
+        {
+          subTitle = (String) document.getPropertyValue("anatolesAgenda:subTitle");
+        }
+        catch (Exception exception)
+        {
+          exception.printStackTrace();
+        }
+        return new AnatolesAgenda(title, text, illustrationUrl, links, subTitle);
       }
       else if (document.getType().equals(Constants.ANATOLES_IDEAS_TYPE) == true)
       {

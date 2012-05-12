@@ -51,6 +51,22 @@ public class AlmanachSection
 
   }
 
+  public final static class AnatolesAgenda
+      extends AlmanachSection
+  {
+
+    private static final long serialVersionUID = -3455951155936810391L;
+
+    public final String subTitle;
+
+    public AnatolesAgenda(String title, String text, String illustrationUrl, List<AlmanachLink> links, String subTitle)
+    {
+      super(SectionType.AnatolesAgenda, title, text, illustrationUrl, links);
+      this.subTitle = subTitle;
+    }
+
+  }
+
   public final static class Challenge
       implements Serializable
   {
