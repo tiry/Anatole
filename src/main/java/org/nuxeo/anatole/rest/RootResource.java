@@ -6,6 +6,9 @@ import java.io.StringWriter;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
@@ -27,7 +30,7 @@ import fr.anatoleapps.almanachdanatole.bo.AlmanachDay;
  * 
  */
 @WebObject(type = "anatoleRoot")
-@Path("/anatole")
+@Path("/almanachdanatole")
 public class RootResource
     extends ModuleRoot
 {
@@ -44,7 +47,8 @@ public class RootResource
   // @GET
   // @Path("{oldDate}")
   @Deprecated
-  public String getOldPage(@PathParam(value = "date") String date)
+  public String getOldPage(@PathParam(value = "date")
+  String date)
       throws Exception
   {
     Page page = PageAdapter.find(getContext().getCoreSession(), date);
@@ -69,11 +73,12 @@ public class RootResource
   }
 
   @GET
-  @Path("{date}")
-  public String getPage(@PathParam(value = "date") String date)
+  @Path("almanachDay/{date}")
+  public String getAlmanachDay(@PathParam(value = "date")
+  String date)
       throws Exception
   {
-    Page page = PageAdapter.find(getContext().getCoreSession(), date);
+    final Page page = PageAdapter.find(getContext().getCoreSession(), date);
     if (page != null)
     {
       final AlmanachDay almanachDay = page.getDocument().getAdapter(AlmanachDay.class);
@@ -84,7 +89,24 @@ public class RootResource
       objectMapper.writeValue(jsonGenerator, almanachDay);
       return writer.toString();
     }
-    return "not-found";
+    throw new WebApplicationException(Response.Status.NOT_FOUND);
+  }
+
+  @GET
+  @Path("exception/{month}")
+  public String getDates(@PathParam(value = "month")
+  String month)
+      throws Exception
+  {
+   
+    throw new WebApplicationException(Response.Status.NOT_FOUND);
+  }
+
+  @Override
+  public Object handleError(WebApplicationException exception)
+  {
+    // return Response.status(exception.getResponse().getStatus()).build();
+    return Response.status(Status.NOT_FOUND).build();
   }
 
 }
