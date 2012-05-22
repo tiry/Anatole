@@ -11,7 +11,6 @@ import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.nuxeo.anatole.Constants;
-import org.nuxeo.anatole.adapter.AlmanachDay;
 import org.nuxeo.anatole.adapter.Page;
 import org.nuxeo.anatole.adapter.PageAdapter;
 import org.nuxeo.ecm.automation.server.jaxrs.io.writers.JsonDocumentListWriter;
@@ -19,6 +18,8 @@ import org.nuxeo.ecm.automation.server.jaxrs.io.writers.JsonDocumentWriter;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.webengine.model.WebObject;
 import org.nuxeo.ecm.webengine.model.impl.ModuleRoot;
+
+import fr.anatoleapps.almanachdanatole.bo.AlmanachDay;
 
 /**
  * 

@@ -7,16 +7,19 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.nuxeo.anatole.Constants;
-import org.nuxeo.anatole.adapter.AlmanachSection.ALaUneSection;
-import org.nuxeo.anatole.adapter.AlmanachSection.AlmanachLink;
-import org.nuxeo.anatole.adapter.AlmanachSection.AnatolesAgenda;
-import org.nuxeo.anatole.adapter.AlmanachSection.Challenge;
-import org.nuxeo.anatole.adapter.AlmanachSection.SectionType;
-import org.nuxeo.anatole.adapter.AlmanachSection.TodaysChallengeSection;
-import org.nuxeo.anatole.adapter.AlmanachSection.WhosThatPersonSection;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.adapter.DocumentAdapterFactory;
 import org.nuxeo.ecm.core.api.impl.blob.AbstractBlob;
+
+import fr.anatoleapps.almanachdanatole.bo.AlmanachDay;
+import fr.anatoleapps.almanachdanatole.bo.AlmanachSection;
+import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.ALaUneSection;
+import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.AlmanachLink;
+import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.AnatolesAgenda;
+import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.Challenge;
+import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.SectionType;
+import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.TodaysChallengeSection;
+import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.WhosThatPersonSection;
 
 public class AdapterFactory
     implements DocumentAdapterFactory
@@ -44,7 +47,7 @@ public class AdapterFactory
           title = (String) document.getPropertyValue("dc:title");
           text = (String) document.getPropertyValue("as:text");
           final AbstractBlob abstractBlob = (AbstractBlob) document.getPropertyValue("as:illustration");
-          illustrationUrl = abstractBlob == null ? null : abstractBlob.getFilename();
+          illustrationUrl = abstractBlob == null ? null : "nxfile/default/" + document.getId() + "/as:illustration/" + abstractBlob.getFilename();
           @SuppressWarnings("unchecked")
           final List<HashMap<String, String>> innerList = (List<HashMap<String, String>>) document.getPropertyValue("as:links");
           for (HashMap<String, String> map : innerList)
@@ -179,7 +182,6 @@ public class AdapterFactory
       {
         for (DocumentModel childDocument : page.getArticles())
         {
-          // TODO: ask if there is a constant for this workflow state
           if (childDocument.getCurrentLifeCycleState().equals("deleted") == true)
           {
             // The document has been deleted

@@ -14,7 +14,6 @@ import org.nuxeo.anatole.Constants;
 import org.nuxeo.anatole.PageManager;
 import org.nuxeo.anatole.PageManagerImpl;
 import org.nuxeo.anatole.PublishInfo;
-import org.nuxeo.anatole.adapter.AlmanachDay;
 import org.nuxeo.anatole.adapter.Article;
 import org.nuxeo.anatole.adapter.Page;
 import org.nuxeo.anatole.adapter.PageAdapter;
@@ -22,6 +21,8 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.storage.sql.SQLRepositoryTestCase;
 import org.nuxeo.runtime.api.Framework;
+
+import fr.anatoleapps.almanachdanatole.bo.AlmanachDay;
 
 public class PagesManagerTest
     extends SQLRepositoryTestCase

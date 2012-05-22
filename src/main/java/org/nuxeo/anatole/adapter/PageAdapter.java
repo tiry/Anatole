@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import org.nuxeo.anatole.Constants;
 import org.nuxeo.ecm.core.api.ClientException;
@@ -59,14 +58,12 @@ public class PageAdapter
       throws Exception
   {
     DateFormat df = new SimpleDateFormat("EEE, d MMM", Locale.US);
-    df.setTimeZone(TimeZone.getTimeZone("GMT"));
     return df.format(getIssueDate().getTime());
   }
 
   protected static DateFormat getDateFormat()
   {
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-    df.setTimeZone(TimeZone.getTimeZone("GMT"));
     return df;
   }
 

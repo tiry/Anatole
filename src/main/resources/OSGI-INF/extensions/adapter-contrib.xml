@@ -17,12 +17,12 @@
     />
 
     <adapter
-      class="org.nuxeo.anatole.adapter.AlmanachDay"
+      class="fr.anatoleapps.almanachdanatole.bo.AlmanachDay"
       factory="org.nuxeo.anatole.adapter.AdapterFactory"
     />
 
     <adapter
-      class="org.nuxeo.anatole.adapter.AlmanachSection"
+      class="fr.anatoleapps.almanachdanatole.bo.AlmanachSection"
       factory="org.nuxeo.anatole.adapter.AdapterFactory"
     />
 
