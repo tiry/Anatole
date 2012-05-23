@@ -47,7 +47,7 @@ public class AdapterFactory
           title = (String) document.getPropertyValue("dc:title");
           text = (String) document.getPropertyValue("as:text");
           final AbstractBlob abstractBlob = (AbstractBlob) document.getPropertyValue("as:illustration");
-          illustrationUrl = abstractBlob == null ? null : "nxfile/default/" + document.getId() + "/as:illustration/" + abstractBlob.getFilename();
+          illustrationUrl = abstractBlob == null ? null : document.getId() + "/as:illustration/" + abstractBlob.getFilename();
           @SuppressWarnings("unchecked")
           final List<HashMap<String, String>> innerList = (List<HashMap<String, String>>) document.getPropertyValue("as:links");
           for (HashMap<String, String> map : innerList)
