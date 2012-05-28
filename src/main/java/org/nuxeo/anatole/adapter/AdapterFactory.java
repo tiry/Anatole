@@ -14,8 +14,9 @@ import org.nuxeo.ecm.core.api.impl.blob.AbstractBlob;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachDay;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.ALaUneSection;
+import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.AlmanachIllustration;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.AlmanachLink;
-import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.AnatolesAgenda;
+import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.AnatolesAgendaSection;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.Challenge;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.SectionType;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.TodaysChallengeSection;
@@ -39,6 +40,7 @@ public class AdapterFactory
       String title = null;
       String text = null;
       String illustrationUrl = null;
+      AlmanachIllustration almanachIllustration = null;
       final List<AlmanachLink> links = new ArrayList<AlmanachLink>();
       if (document.getType().equals(Constants.TODAYS_CHALLENGE_TYPE) == false)
       {
@@ -48,6 +50,7 @@ public class AdapterFactory
           text = (String) document.getPropertyValue("as:text");
           final AbstractBlob abstractBlob = (AbstractBlob) document.getPropertyValue("as:illustration");
           illustrationUrl = abstractBlob == null ? null : document.getId() + "/as:illustration/" + abstractBlob.getFilename();
+          almanachIllustration = new AlmanachIllustration(null, null, illustrationUrl);
           @SuppressWarnings("unchecked")
           final List<HashMap<String, String>> innerList = (List<HashMap<String, String>>) document.getPropertyValue("as:links");
           for (HashMap<String, String> map : innerList)
@@ -75,15 +78,15 @@ public class AdapterFactory
         {
           exception.printStackTrace();
         }
-        return new ALaUneSection(title, text, illustrationUrl, links, calendar == null ? null : calendar.getTime());
+        return new ALaUneSection(title, text, almanachIllustration, links, calendar == null ? null : calendar.getTime());
       }
       else if (document.getType().equals(Constants.ANATOLE_AT_THE_MARKET_TYPE) == true)
       {
-        return new AlmanachSection(SectionType.AnatoleAtTheMarket, title, text, illustrationUrl, links);
+        return new AlmanachSection(SectionType.AnatoleAtTheMarket, title, text, almanachIllustration, links);
       }
       else if (document.getType().equals(Constants.ANATOLE_FRANCE_TOUR_TYPE) == true)
       {
-        return new AlmanachSection(SectionType.AnatoleFranceTour, title, text, illustrationUrl, links);
+        return new AlmanachSection(SectionType.AnatoleFranceTour, title, text, almanachIllustration, links);
       }
       else if (document.getType().equals(Constants.ANATOLES_AGENDA_TYPE) == true)
       {
@@ -96,15 +99,15 @@ public class AdapterFactory
         {
           exception.printStackTrace();
         }
-        return new AnatolesAgenda(title, text, illustrationUrl, links, subTitle);
+        return new AnatolesAgendaSection(title, text, almanachIllustration, links, subTitle);
       }
       else if (document.getType().equals(Constants.ANATOLES_IDEAS_TYPE) == true)
       {
-        return new AlmanachSection(SectionType.AnatolesIdeas, title, text, illustrationUrl, links);
+        return new AlmanachSection(SectionType.AnatolesIdeas, title, text, almanachIllustration, links);
       }
       else if (document.getType().equals(Constants.FREE_SECTION_TYPE) == true)
       {
-        return new AlmanachSection(SectionType.FreeSection, title, text, illustrationUrl, links);
+        return new AlmanachSection(SectionType.FreeSection, title, text, almanachIllustration, links);
       }
       else if (document.getType().equals(Constants.TODAYS_CHALLENGE_TYPE) == true)
       {
@@ -153,11 +156,11 @@ public class AdapterFactory
       }
       else if (document.getType().equals(Constants.TODAYS_CHALLENGE_TYPE) == true)
       {
-        return new AlmanachSection(SectionType.TodaysChallenge, title, text, illustrationUrl, links);
+        return new AlmanachSection(SectionType.TodaysChallenge, title, text, almanachIllustration, links);
       }
       else if (document.getType().equals(Constants.WHAT_DO_ID_DO_TODAY_TYPE) == true)
       {
-        return new AlmanachSection(SectionType.WhatDoIDoToday, title, text, illustrationUrl, links);
+        return new AlmanachSection(SectionType.WhatDoIDoToday, title, text, almanachIllustration, links);
       }
       else if (document.getType().equals(Constants.WHOS_THAT_PERSON_TYPE) == true)
       {
@@ -170,7 +173,7 @@ public class AdapterFactory
         {
           exception.printStackTrace();
         }
-        return new WhosThatPersonSection(title, text, illustrationUrl, links, answer);
+        return new WhosThatPersonSection(title, text, almanachIllustration, links, answer);
       }
     }
 
@@ -194,7 +197,7 @@ public class AdapterFactory
           }
         }
         final Calendar date = (Calendar) document.getPropertyValue(PageAdapter.ALMANACH_DAY);
-        return new AlmanachDay(date == null ? null : date.getTime(), (String) document.getPropertyValue("almanachDay:when"), (String) document.getPropertyValue("almanachDay:sunRise"), (String) document.getPropertyValue("almanachDay:sunSet"), (String) document.getPropertyValue("almanachDay:moonRise"), (String) document.getPropertyValue("almanachDay:moonSet"), (String) document.getPropertyValue("almanachDay:astrology"), (String) document.getPropertyValue("almanachDay:republicanCalendar"), (String) document.getPropertyValue("almanachDay:saint"), almanachSections);
+        return new AlmanachDay(date == null ? null : date.getTime(), (String) document.getPropertyValue("almanachDay:when"), (String) document.getPropertyValue("almanachDay:sunRise"), (String) document.getPropertyValue("almanachDay:sunSet"), (String) document.getPropertyValue("almanachDay:moonRise"), (String) document.getPropertyValue("almanachDay:moonSet"), (String) document.getPropertyValue("almanachDay:moonComment"), (String) document.getPropertyValue("almanachDay:astrology"), (String) document.getPropertyValue("almanachDay:republicanCalendar"), (String) document.getPropertyValue("almanachDay:saint"), almanachSections);
       }
       catch (Exception exception)
       {

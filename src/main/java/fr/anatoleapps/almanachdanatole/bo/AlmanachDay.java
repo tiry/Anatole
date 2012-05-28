@@ -26,6 +26,8 @@ public final class AlmanachDay
 
   public final String moonSet;
 
+  public final String moonComment;
+
   public final String astrology;
 
   public final String republicanCalendar;
@@ -36,11 +38,11 @@ public final class AlmanachDay
 
   public AlmanachDay()
   {
-    this(null, null, null, null, null, null, null, null, null, null);
+    this(null, null, null, null, null, null, null, null, null, null, null);
   }
 
-  public AlmanachDay(Date date, String when, String sunRise, String sunSet, String moonRise, String moonSet, String astrology, String republicanCalendar,
-      String saint, List<AlmanachSection> sections)
+  public AlmanachDay(Date date, String when, String sunRise, String sunSet, String moonRise, String moonSet, String moonComment, String astrology,
+      String republicanCalendar, String saint, List<AlmanachSection> sections)
   {
     this.date = date;
     this.when = when;
@@ -48,6 +50,7 @@ public final class AlmanachDay
     this.sunSet = sunSet;
     this.moonRise = moonRise;
     this.moonSet = moonSet;
+    this.moonComment = moonComment;
     this.astrology = astrology;
     this.republicanCalendar = republicanCalendar;
     this.saint = saint;

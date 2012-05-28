@@ -15,7 +15,7 @@ public class AlmanachSection
     implements Serializable
 {
 
-  public final static class AlmanachLink
+  public static class AlmanachLink
       implements Serializable
   {
 
@@ -38,6 +38,27 @@ public class AlmanachSection
 
   }
 
+  public final static class AlmanachIllustration
+      extends AlmanachLink
+  {
+
+    private static final long serialVersionUID = 2054837251217641789L;
+
+    public final String illustrationUrl;
+
+    public AlmanachIllustration()
+    {
+      this(null, null, null);
+    }
+
+    public AlmanachIllustration(String label, String url, String illustrationUrl)
+    {
+      super(label, url);
+      this.illustrationUrl = illustrationUrl;
+    }
+
+  }
+
   public static enum SectionType
   {
     ALaUne, AnatoleAtTheMarket, AnatoleFranceTour, AnatolesAgenda, AnatolesIdeas, FreeSection, TodaysChallenge, WhatDoIDoToday, WhosThatPerson
@@ -56,15 +77,15 @@ public class AlmanachSection
       this(null, null, null, null, null);
     }
 
-    public ALaUneSection(String title, String text, String illustrationUrl, List<AlmanachLink> links, Date date)
+    public ALaUneSection(String title, String text, AlmanachIllustration illustration, List<AlmanachLink> links, Date date)
     {
-      super(SectionType.ALaUne, title, text, illustrationUrl, links);
+      super(SectionType.ALaUne, title, text, illustration, links);
       this.date = date;
     }
 
   }
 
-  public final static class AnatolesAgenda
+  public final static class AnatolesAgendaSection
       extends AlmanachSection
   {
 
@@ -72,14 +93,14 @@ public class AlmanachSection
 
     public final String subTitle;
 
-    public AnatolesAgenda()
+    public AnatolesAgendaSection()
     {
       this(null, null, null, null, null);
     }
 
-    public AnatolesAgenda(String title, String text, String illustrationUrl, List<AlmanachLink> links, String subTitle)
+    public AnatolesAgendaSection(String title, String text, AlmanachIllustration illustration, List<AlmanachLink> links, String subTitle)
     {
-      super(SectionType.AnatolesAgenda, title, text, illustrationUrl, links);
+      super(SectionType.AnatolesAgenda, title, text, illustration, links);
       this.subTitle = subTitle;
     }
 
@@ -148,9 +169,9 @@ public class AlmanachSection
       this(null, null, null, null, null);
     }
 
-    public WhosThatPersonSection(String title, String text, String illustrationUrl, List<AlmanachLink> links, String answer)
+    public WhosThatPersonSection(String title, String text, AlmanachIllustration illustration, List<AlmanachLink> links, String answer)
     {
-      super(SectionType.WhosThatPerson, title, text, illustrationUrl, links);
+      super(SectionType.WhosThatPerson, title, text, illustration, links);
       this.answer = answer;
     }
 
@@ -164,16 +185,16 @@ public class AlmanachSection
 
   public final String text;
 
-  public final String illustrationUrl;
+  public final AlmanachIllustration illustration;
 
   public final List<AlmanachLink> links;
 
-  public AlmanachSection(SectionType sectionType, String title, String text, String illustrationUrl, List<AlmanachLink> links)
+  public AlmanachSection(SectionType sectionType, String title, String text, AlmanachIllustration illustration, List<AlmanachLink> links)
   {
     this.sectionType = sectionType;
     this.title = title;
     this.text = text;
-    this.illustrationUrl = illustrationUrl;
+    this.illustration = illustration;
     this.links = links;
   }
 
