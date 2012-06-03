@@ -17,6 +17,7 @@ import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.ALaUneSection;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.AlmanachIllustration;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.AlmanachLink;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.AnatolesAgendaSection;
+import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.AnatolesIdeasSection;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.Challenge;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.SectionType;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.TodaysChallengeSection;
@@ -103,7 +104,16 @@ public class AdapterFactory
       }
       else if (document.getType().equals(Constants.ANATOLES_IDEAS_TYPE) == true)
       {
-        return new AlmanachSection(SectionType.AnatolesIdeas, title, text, almanachIllustration, links);
+        String subTitle = null;
+        try
+        {
+          subTitle = (String) document.getPropertyValue("anatolesIdeas:subTitle");
+        }
+        catch (Exception exception)
+        {
+          exception.printStackTrace();
+        }
+        return new AnatolesIdeasSection( title, text, almanachIllustration, links, subTitle);
       }
       else if (document.getType().equals(Constants.FREE_SECTION_TYPE) == true)
       {

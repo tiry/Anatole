@@ -85,7 +85,7 @@ public class AlmanachSection
 
   }
 
-  public final static class AnatolesAgendaSection
+  public static class AnatolesAgendaSection
       extends AlmanachSection
   {
 
@@ -100,8 +100,31 @@ public class AlmanachSection
 
     public AnatolesAgendaSection(String title, String text, AlmanachIllustration illustration, List<AlmanachLink> links, String subTitle)
     {
-      super(SectionType.AnatolesAgenda, title, text, illustration, links);
+      this(SectionType.AnatolesAgenda, title, text, illustration, links, subTitle);
+    }
+
+    protected AnatolesAgendaSection(SectionType sectionType, String title, String text, AlmanachIllustration illustration, List<AlmanachLink> links,
+        String subTitle)
+    {
+      super(sectionType, title, text, illustration, links);
       this.subTitle = subTitle;
+    }
+  }
+
+  public final static class AnatolesIdeasSection
+      extends AnatolesAgendaSection
+  {
+
+    private static final long serialVersionUID = 8829204364775400502L;
+
+    public AnatolesIdeasSection()
+    {
+      this(null, null, null, null, null);
+    }
+
+    public AnatolesIdeasSection(String title, String text, AlmanachIllustration illustration, List<AlmanachLink> links, String subTitle)
+    {
+      super(SectionType.AnatolesIdeas, title, text, illustration, links, subTitle);
     }
 
   }
