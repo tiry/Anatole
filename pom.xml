@@ -11,11 +11,11 @@
   <name>Anatole</name>
   <description />
   <dependencies>
-    <!-- Add dependecy on Studio project -->
+    <!-- Add dependency on Studio project -->
     <dependency>
       <groupId>nuxeo-studio</groupId>
       <artifactId>AlmanachAnatole</artifactId>
-      <version>0.2.3</version>
+      <version>0.2.4</version>
     </dependency>
     <!-- Standard Nuxeo dependencies -->
     <dependency>

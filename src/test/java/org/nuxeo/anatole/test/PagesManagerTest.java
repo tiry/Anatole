@@ -200,7 +200,6 @@ public class PagesManagerTest
       assertEquals("The 'when' field is not OK", page.getDocument().getPropertyValue("almanachDay:when"), almanachDay.when);
       assertEquals("The 'date' field is not OK", page.getDocument().getPropertyValue(PageAdapter.ALMANACH_DAY), almanachDay.date);
       assertNotNull("The 'sections' field is not OK", almanachDay.sections);
-      assertEquals("The 'sections' field size is not OK", true, almanachDay.sections.size() >= 1);
     }
   }
 

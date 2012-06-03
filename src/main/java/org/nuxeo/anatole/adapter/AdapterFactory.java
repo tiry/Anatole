@@ -40,7 +40,6 @@ public class AdapterFactory
     {
       String title = null;
       String text = null;
-      String illustrationUrl = null;
       AlmanachIllustration almanachIllustration = null;
       final List<AlmanachLink> links = new ArrayList<AlmanachLink>();
       if (document.getType().equals(Constants.TODAYS_CHALLENGE_TYPE) == false)
@@ -50,8 +49,10 @@ public class AdapterFactory
           title = (String) document.getPropertyValue("dc:title");
           text = (String) document.getPropertyValue("as:text");
           final AbstractBlob abstractBlob = (AbstractBlob) document.getPropertyValue("as:illustration");
-          illustrationUrl = abstractBlob == null ? null : document.getId() + "/as:illustration/" + abstractBlob.getFilename();
-          almanachIllustration = new AlmanachIllustration(null, null, illustrationUrl);
+          final String illustrationUrl = abstractBlob == null ? null : document.getId() + "/as:illustration/" + abstractBlob.getFilename();
+          final String illustrationCreditLabel = (String) document.getPropertyValue("as:illustrationCreditLabel");
+          final String illustrationCreditUrl = (String) document.getPropertyValue("as:illustrationCreditUrl");
+          almanachIllustration = new AlmanachIllustration(illustrationCreditLabel, illustrationCreditUrl, illustrationUrl);
           @SuppressWarnings("unchecked")
           final List<HashMap<String, String>> innerList = (List<HashMap<String, String>>) document.getPropertyValue("as:links");
           for (HashMap<String, String> map : innerList)
@@ -63,9 +64,6 @@ public class AdapterFactory
         {
           // TODO: handle each property exception
           exception.printStackTrace();
-          title = null;
-          text = null;
-          illustrationUrl = null;
         }
       }
       if (document.getType().equals(Constants.ALAUNE_TYPE) == true)
@@ -113,7 +111,7 @@ public class AdapterFactory
         {
           exception.printStackTrace();
         }
-        return new AnatolesIdeasSection( title, text, almanachIllustration, links, subTitle);
+        return new AnatolesIdeasSection(title, text, almanachIllustration, links, subTitle);
       }
       else if (document.getType().equals(Constants.FREE_SECTION_TYPE) == true)
       {
