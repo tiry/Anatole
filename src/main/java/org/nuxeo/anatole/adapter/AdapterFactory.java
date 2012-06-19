@@ -1,5 +1,6 @@
 package org.nuxeo.anatole.adapter;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -49,7 +50,9 @@ public class AdapterFactory
           title = (String) document.getPropertyValue("dc:title");
           text = (String) document.getPropertyValue("as:text");
           final AbstractBlob abstractBlob = (AbstractBlob) document.getPropertyValue("as:illustration");
-          final String illustrationUrl = abstractBlob == null ? null : document.getId() + "/as:illustration/" + abstractBlob.getFilename();
+          // We need to encode the file name
+          final String illustrationUrl = abstractBlob == null ? null : document.getId() + "/as:illustration/" + URLEncoder.encode(abstractBlob.getFilename(),
+              "UTF-8");
           final String illustrationCreditLabel = (String) document.getPropertyValue("as:illustrationCreditLabel");
           final String illustrationCreditUrl = (String) document.getPropertyValue("as:illustrationCreditUrl");
           almanachIllustration = new AlmanachIllustration(illustrationCreditLabel, illustrationCreditUrl, illustrationUrl);
