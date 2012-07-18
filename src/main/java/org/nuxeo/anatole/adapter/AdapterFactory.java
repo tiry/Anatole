@@ -12,6 +12,8 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.adapter.DocumentAdapterFactory;
 import org.nuxeo.ecm.core.api.impl.blob.AbstractBlob;
 
+import sun.awt.image.ByteArrayImageSource;
+import sun.awt.image.ToolkitImage;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachDay;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.ALaUneSection;
@@ -50,12 +52,18 @@ public class AdapterFactory
           title = (String) document.getPropertyValue("dc:title");
           text = (String) document.getPropertyValue("as:text");
           final AbstractBlob abstractBlob = (AbstractBlob) document.getPropertyValue("as:illustration");
+
+          // We extract the bitmap dimensions
+          final ToolkitImage illustrationImage = new ToolkitImage(new ByteArrayImageSource(abstractBlob.getByteArray()));
+          final int illustrationWidth = illustrationImage.getWidth();
+          final int illustrationHeight = illustrationImage.getHeight();
+
           // We need to encode the file name
           final String illustrationUrl = abstractBlob == null ? null : document.getId() + "/as:illustration/" + URLEncoder.encode(abstractBlob.getFilename(),
               "UTF-8");
           final String illustrationCreditLabel = (String) document.getPropertyValue("as:illustrationCreditLabel");
           final String illustrationCreditUrl = (String) document.getPropertyValue("as:illustrationCreditUrl");
-          almanachIllustration = new AlmanachIllustration(illustrationCreditLabel, illustrationCreditUrl, illustrationUrl);
+          almanachIllustration = new AlmanachIllustration(illustrationCreditLabel, illustrationCreditUrl, illustrationUrl, illustrationWidth, illustrationHeight);
           @SuppressWarnings("unchecked")
           final List<HashMap<String, String>> innerList = (List<HashMap<String, String>>) document.getPropertyValue("as:links");
           for (HashMap<String, String> map : innerList)

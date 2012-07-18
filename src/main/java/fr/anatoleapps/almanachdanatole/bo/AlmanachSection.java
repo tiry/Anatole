@@ -3,6 +3,7 @@ package fr.anatoleapps.almanachdanatole.bo;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 
@@ -36,6 +37,11 @@ public class AlmanachSection
       this.url = url;
     }
 
+    public String getLabel()
+    {
+      return label == null || label.length() <= 0 ? url : label;
+    }
+
   }
 
   public final static class AlmanachIllustration
@@ -46,15 +52,31 @@ public class AlmanachSection
 
     public final String illustrationUrl;
 
+    public final int width;
+
+    public final int height;
+
     public AlmanachIllustration()
     {
-      this(null, null, null);
+      this(null, null, null, -1, -1);
     }
 
-    public AlmanachIllustration(String label, String url, String illustrationUrl)
+    public AlmanachIllustration(String label, String url, String illustrationUrl, int width, int height)
     {
       super(label, url);
       this.illustrationUrl = illustrationUrl;
+      this.width = width;
+      this.height = height;
+    }
+
+    public boolean hasCredits()
+    {
+      return label != null && label.length() > 0;
+    }
+
+    public boolean isPortrait()
+    {
+      return height >= width;
     }
 
   }
@@ -109,6 +131,25 @@ public class AlmanachSection
       super(sectionType, title, text, illustration, links);
       this.subTitle = subTitle;
     }
+
+    @Override
+    public String toText(boolean isHtml)
+    {
+      final StringBuilder sb = new StringBuilder();
+      if (isHtml == true)
+      {
+        sb.append("<b>");
+      }
+      sb.append(isHtml == true ? subTitle : AlmanachSection.cleanHtml(subTitle));
+      if (isHtml == true)
+      {
+        sb.append("</b>");
+      }
+      sb.append(isHtml == true ? "<br/><br/>" : "\n\n");
+      sb.append(super.toText(isHtml));
+      return sb.toString();
+    }
+
   }
 
   public final static class AnatolesIdeasSection
@@ -156,6 +197,28 @@ public class AlmanachSection
       this.answerLabel = answerLabel;
     }
 
+    public String toText(boolean isHtml)
+    {
+      final StringBuilder sb = new StringBuilder();
+      if (isHtml == true)
+      {
+        sb.append("<b>");
+      }
+      sb.append(isHtml == true ? question : AlmanachSection.cleanHtml(question));
+      if (isHtml == true)
+      {
+        sb.append("</b>");
+      }
+      sb.append(isHtml == true ? "<br/>" : "\n");
+      for (String possibleAnswer : possibleAnswers)
+      {
+        sb.append(isHtml == true ? " &#8226; " : " - ");
+        sb.append(isHtml == true ? possibleAnswer : AlmanachSection.cleanHtml(possibleAnswer));
+        sb.append(isHtml == true ? "<br/>" : "\n");
+      }
+      return sb.toString();
+    }
+
   }
 
   public final static class TodaysChallengeSection
@@ -175,6 +238,12 @@ public class AlmanachSection
     {
       super(SectionType.TodaysChallenge, null, null, null, null);
       this.challenges = challenges;
+    }
+
+    @Override
+    public String toText(boolean isHtml)
+    {
+      return challenges.get(new Random().nextInt(challenges.size())).toText(isHtml);
     }
 
   }
@@ -198,6 +267,23 @@ public class AlmanachSection
       this.answer = answer;
     }
 
+    public boolean hasAnswer()
+    {
+      return answer != null && answer.length() > 0;
+    }
+
+  }
+
+  public static String cleanHtml(String string)
+  {
+    if (string == null)
+    {
+      return null;
+    }
+    // final Document document = new Cleaner(Whitelist.simpleText()).clean(Jsoup.parse(string));
+    // document.outputSettings().escapeMode(EscapeMode.xhtml);
+    // return document.body().html();
+    return string == null ? string : string.replaceAll("\\<.*?>", "");
   }
 
   private static final long serialVersionUID = 7292403308938772396L;
@@ -224,6 +310,16 @@ public class AlmanachSection
   public AlmanachSection()
   {
     this(null, null, null, null, null);
+  }
+
+  public final boolean hasDetail()
+  {
+    return sectionType == SectionType.AnatoleFranceTour || sectionType == SectionType.AnatolesAgenda || sectionType == SectionType.TodaysChallenge || sectionType == SectionType.FreeSection;
+  }
+
+  public String toText(boolean isHtml)
+  {
+    return isHtml == true ? text : AlmanachSection.cleanHtml(text);
   }
 
 }

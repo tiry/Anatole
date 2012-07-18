@@ -57,4 +57,25 @@ public final class AlmanachDay
     this.sections = sections;
   }
 
+  public String toText(boolean isHtml)
+  {
+    final StringBuilder sb = new StringBuilder();
+    if (isHtml == true)
+    {
+      sb.append("<b>");
+    }
+    sb.append(saint);
+    if (isHtml == true)
+    {
+      sb.append("</b>");
+    }
+    sb.append(isHtml == true ? "<br/>" : "\n");
+    sb.append(isHtml == true ? " &#8226; " : " - ");
+    sb.append(isHtml == true ? republicanCalendar: AlmanachSection.cleanHtml(republicanCalendar));
+    sb.append(isHtml == true ? "<br/>" : "\n");
+    sb.append(isHtml == true ? " &#8226; " : " - ");
+    sb.append(isHtml == true ? astrology: AlmanachSection.cleanHtml(astrology));
+    return sb.toString();
+  }
+
 }
