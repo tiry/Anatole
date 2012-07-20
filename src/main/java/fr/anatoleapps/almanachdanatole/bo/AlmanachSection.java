@@ -16,6 +16,65 @@ public class AlmanachSection
     implements Serializable
 {
 
+  public static interface AlmanachImage
+  {
+
+    String getUrl();
+
+    boolean isPortrait();
+
+    int getWidth();
+
+    int getHeight();
+
+  }
+
+  public final static class SimpleAlmanachImage
+      implements AlmanachImage, Serializable
+  {
+
+    private static final long serialVersionUID = -6536716311897847247L;
+
+    public final String url;
+
+    public final int width;
+
+    public final int height;
+
+    public SimpleAlmanachImage()
+    {
+      this(null, -1, -1);
+    }
+
+    public SimpleAlmanachImage(String url, int width, int height)
+    {
+      this.url = url;
+      this.width = width;
+      this.height = height;
+    }
+
+    public boolean isPortrait()
+    {
+      return height >= width;
+    }
+
+    public String getUrl()
+    {
+      return url;
+    }
+
+    public int getWidth()
+    {
+      return width;
+    }
+
+    public int getHeight()
+    {
+      return height;
+    }
+
+  }
+
   public static class AlmanachLink
       implements Serializable
   {
@@ -42,10 +101,16 @@ public class AlmanachSection
       return label == null || label.length() <= 0 ? url : label;
     }
 
+    public boolean hasCredits()
+    {
+      return label != null && label.length() > 0;
+    }
+
   }
 
   public final static class AlmanachIllustration
       extends AlmanachLink
+      implements AlmanachImage
   {
 
     private static final long serialVersionUID = 2054837251217641789L;
@@ -69,14 +134,24 @@ public class AlmanachSection
       this.height = height;
     }
 
-    public boolean hasCredits()
-    {
-      return label != null && label.length() > 0;
-    }
-
     public boolean isPortrait()
     {
       return height >= width;
+    }
+
+    public String getUrl()
+    {
+      return illustrationUrl;
+    }
+
+    public int getWidth()
+    {
+      return width;
+    }
+
+    public int getHeight()
+    {
+      return height;
     }
 
   }

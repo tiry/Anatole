@@ -1,19 +1,25 @@
 package org.nuxeo.anatole.adapter;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+
+import javax.imageio.ImageIO;
 
 import org.nuxeo.anatole.Constants;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.adapter.DocumentAdapterFactory;
 import org.nuxeo.ecm.core.api.impl.blob.AbstractBlob;
 
-import sun.awt.image.ByteArrayImageSource;
-import sun.awt.image.ToolkitImage;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachDay;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.ALaUneSection;
@@ -23,6 +29,7 @@ import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.AnatolesAgendaSection;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.AnatolesIdeasSection;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.Challenge;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.SectionType;
+import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.SimpleAlmanachImage;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.TodaysChallengeSection;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.WhosThatPersonSection;
 
@@ -51,19 +58,17 @@ public class AdapterFactory
         {
           title = (String) document.getPropertyValue("dc:title");
           text = (String) document.getPropertyValue("as:text");
-          final AbstractBlob abstractBlob = (AbstractBlob) document.getPropertyValue("as:illustration");
 
-          // We extract the bitmap dimensions
-          final ToolkitImage illustrationImage = new ToolkitImage(new ByteArrayImageSource(abstractBlob.getByteArray()));
-          final int illustrationWidth = illustrationImage.getWidth();
-          final int illustrationHeight = illustrationImage.getHeight();
+          final String illustrationFieldName = "as:illustration";
+          final AbstractBlob abstractBlob = (AbstractBlob) document.getPropertyValue(illustrationFieldName);
+          final AtomicInteger illustrationWidth = new AtomicInteger(-1);
+          final AtomicInteger illustrationHeight = new AtomicInteger(-1);
+          final AtomicReference<String> illustrationUrl = new AtomicReference<String>();
+          extractImageDimensions(abstractBlob, illustrationWidth, illustrationHeight, illustrationUrl, document, illustrationFieldName);
 
-          // We need to encode the file name
-          final String illustrationUrl = abstractBlob == null ? null : document.getId() + "/as:illustration/" + URLEncoder.encode(abstractBlob.getFilename(),
-              "UTF-8");
           final String illustrationCreditLabel = (String) document.getPropertyValue("as:illustrationCreditLabel");
           final String illustrationCreditUrl = (String) document.getPropertyValue("as:illustrationCreditUrl");
-          almanachIllustration = new AlmanachIllustration(illustrationCreditLabel, illustrationCreditUrl, illustrationUrl, illustrationWidth, illustrationHeight);
+          almanachIllustration = new AlmanachIllustration(illustrationCreditLabel, illustrationCreditUrl, illustrationUrl.get(), illustrationWidth.get(), illustrationHeight.get());
           @SuppressWarnings("unchecked")
           final List<HashMap<String, String>> innerList = (List<HashMap<String, String>>) document.getPropertyValue("as:links");
           for (HashMap<String, String> map : innerList)
@@ -216,7 +221,25 @@ public class AdapterFactory
           }
         }
         final Calendar date = (Calendar) document.getPropertyValue(PageAdapter.ALMANACH_DAY);
-        return new AlmanachDay(date == null ? null : date.getTime(), (String) document.getPropertyValue("almanachDay:when"), (String) document.getPropertyValue("almanachDay:sunRise"), (String) document.getPropertyValue("almanachDay:sunSet"), (String) document.getPropertyValue("almanachDay:moonRise"), (String) document.getPropertyValue("almanachDay:moonSet"), (String) document.getPropertyValue("almanachDay:moonComment"), (String) document.getPropertyValue("almanachDay:astrology"), (String) document.getPropertyValue("almanachDay:republicanCalendar"), (String) document.getPropertyValue("almanachDay:saint"), almanachSections);
+
+        SimpleAlmanachImage illustration = null;
+        try
+        {
+          final String illustrationFieldName = "almanachDay:illustration";
+          final AbstractBlob abstractBlob = (AbstractBlob) document.getPropertyValue(illustrationFieldName);
+          final AtomicInteger illustrationWidth = new AtomicInteger(-1);
+          final AtomicInteger illustrationHeight = new AtomicInteger(-1);
+          final AtomicReference<String> illustrationUrl = new AtomicReference<String>();
+          extractImageDimensions(abstractBlob, illustrationWidth, illustrationHeight, illustrationUrl, document, illustrationFieldName);
+          illustration = illustrationUrl.get() == null ? null
+              : new SimpleAlmanachImage(illustrationUrl.get(), illustrationWidth.get(), illustrationHeight.get());
+        }
+        catch (Exception exception)
+        {
+          // That's normal for the old days
+        }
+
+        return new AlmanachDay(date == null ? null : date.getTime(), (String) document.getPropertyValue("almanachDay:when"), (String) document.getPropertyValue("almanachDay:sunRise"), (String) document.getPropertyValue("almanachDay:sunSet"), (String) document.getPropertyValue("almanachDay:moonRise"), (String) document.getPropertyValue("almanachDay:moonSet"), (String) document.getPropertyValue("almanachDay:moonComment"), (String) document.getPropertyValue("almanachDay:astrology"), (String) document.getPropertyValue("almanachDay:republicanCalendar"), (String) document.getPropertyValue("almanachDay:saint"), illustration, almanachSections);
       }
       catch (Exception exception)
       {
@@ -231,6 +254,44 @@ public class AdapterFactory
     }
 
     return null;
+  }
+
+  // private void extractImageDimensions(AbstractBlob abstractBlob, AtomicInteger illustrationWidth, AtomicInteger illustrationHeight,
+  // AtomicReference<String> illustrationUrl, DocumentModel document, String fieldName)
+  // {
+  // final ToolkitImage illustrationImage = new ToolkitImage(new ByteArrayImageSource(abstractBlob.getByteArray()));
+  // illustrationWidth.set(illustrationImage.getWidth());
+  // illustrationHeight.set(illustrationImage.getHeight());
+  // // We need to encode the file name
+  // illustrationUrl.set(abstractBlob == null ? null : document.getId() + "/" + fieldName + "/" + URLEncoder.encode(abstractBlob.getFilename(),
+  // "UTF-8"));
+  // }
+
+  private void extractImageDimensions(AbstractBlob abstractBlob, AtomicInteger illustrationWidth, AtomicInteger illustrationHeight,
+      AtomicReference<String> illustrationUrl, DocumentModel document, String fieldName)
+  {
+    if (abstractBlob != null)
+    {
+      try
+      {
+        final BufferedImage illustrationImage = ImageIO.read(new ByteArrayInputStream(abstractBlob.getByteArray()));
+        illustrationWidth.set(illustrationImage.getWidth());
+        illustrationHeight.set(illustrationImage.getHeight());
+      }
+      catch (IOException exception)
+      {
+        exception.printStackTrace();
+      }
+      // We need to encode the file name
+      try
+      {
+        illustrationUrl.set(abstractBlob == null ? null : document.getId() + "/" + fieldName + "/" + URLEncoder.encode(abstractBlob.getFilename(), "UTF-8"));
+      }
+      catch (UnsupportedEncodingException exception)
+      {
+        exception.printStackTrace();
+      }
+    }
   }
 
 }
