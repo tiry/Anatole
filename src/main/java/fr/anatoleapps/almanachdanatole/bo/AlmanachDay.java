@@ -14,6 +14,26 @@ public final class AlmanachDay
     implements Serializable
 {
 
+  public final static class AlmanachSaint
+      implements Serializable
+  {
+
+    private static final long serialVersionUID = 5280370155647982006L;
+
+    public final String name;
+
+    public AlmanachSaint()
+    {
+      this(null);
+    }
+
+    public AlmanachSaint(String name)
+    {
+      this.name = name;
+    }
+
+  }
+
   private static final long serialVersionUID = 5285689154275864956L;
 
   public final Date date;
@@ -36,17 +56,19 @@ public final class AlmanachDay
 
   public final String saint;
 
+  public final List<AlmanachSaint> saints;
+
   public final AlmanachImage illustration;
 
   public final List<AlmanachSection> sections;
 
   public AlmanachDay()
   {
-    this(null, null, null, null, null, null, null, null, null, null, null, null);
+    this(null, null, null, null, null, null, null, null, null, null, null, null, null);
   }
 
   public AlmanachDay(Date date, String when, String sunRise, String sunSet, String moonRise, String moonSet, String moonComment, String astrology,
-      String republicanCalendar, String saint, AlmanachImage illustration, List<AlmanachSection> sections)
+      String republicanCalendar, String saint, List<AlmanachSaint> saints, AlmanachImage illustration, List<AlmanachSection> sections)
   {
     this.date = date;
     this.when = when;
@@ -58,9 +80,8 @@ public final class AlmanachDay
     this.astrology = astrology;
     this.republicanCalendar = republicanCalendar;
     this.saint = saint;
+    this.saints = saints;
     this.illustration = illustration;
-    // this.illustration = new SimpleAlmanachImage("http://shared.smartnsoft.com/almanachanatole/anatole_overalls.png", 188, 398);
-    // this.illustration = new SimpleAlmanachImage("35155537-bb6d-4f90-875b-d8c73dd94a02/as:illustration/Mirepoix.jpg", 188, 398);
     this.sections = sections;
   }
 

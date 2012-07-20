@@ -21,6 +21,7 @@ import org.nuxeo.ecm.core.api.adapter.DocumentAdapterFactory;
 import org.nuxeo.ecm.core.api.impl.blob.AbstractBlob;
 
 import fr.anatoleapps.almanachdanatole.bo.AlmanachDay;
+import fr.anatoleapps.almanachdanatole.bo.AlmanachDay.AlmanachSaint;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.ALaUneSection;
 import fr.anatoleapps.almanachdanatole.bo.AlmanachSection.AlmanachIllustration;
@@ -239,7 +240,29 @@ public class AdapterFactory
           // That's normal for the old days
         }
 
-        return new AlmanachDay(date == null ? null : date.getTime(), (String) document.getPropertyValue("almanachDay:when"), (String) document.getPropertyValue("almanachDay:sunRise"), (String) document.getPropertyValue("almanachDay:sunSet"), (String) document.getPropertyValue("almanachDay:moonRise"), (String) document.getPropertyValue("almanachDay:moonSet"), (String) document.getPropertyValue("almanachDay:moonComment"), (String) document.getPropertyValue("almanachDay:astrology"), (String) document.getPropertyValue("almanachDay:republicanCalendar"), (String) document.getPropertyValue("almanachDay:saint"), illustration, almanachSections);
+        final ArrayList<AlmanachSaint> saints = new ArrayList<AlmanachSaint>();
+        try
+        {
+          final List<HashMap<String, ?>> innerList = (List<HashMap<String, ?>>) document.getPropertyValue("almanachDay:saints");
+          for (HashMap<String, ?> object : innerList)
+          {
+            String saint = null;
+            for (Entry<String, ?> entry : object.entrySet())
+            {
+              if (entry.getKey().equals("firstname") == true)
+              {
+                saint = (String) entry.getValue();
+              }
+            }
+            saints.add(new AlmanachSaint(saint));
+          }
+        }
+        catch (Exception exception)
+        {
+          // That's normal for the old days
+        }
+
+        return new AlmanachDay(date == null ? null : date.getTime(), (String) document.getPropertyValue("almanachDay:when"), (String) document.getPropertyValue("almanachDay:sunRise"), (String) document.getPropertyValue("almanachDay:sunSet"), (String) document.getPropertyValue("almanachDay:moonRise"), (String) document.getPropertyValue("almanachDay:moonSet"), (String) document.getPropertyValue("almanachDay:moonComment"), (String) document.getPropertyValue("almanachDay:astrology"), (String) document.getPropertyValue("almanachDay:republicanCalendar"), (String) document.getPropertyValue("almanachDay:saint"), saints, illustration, almanachSections);
       }
       catch (Exception exception)
       {

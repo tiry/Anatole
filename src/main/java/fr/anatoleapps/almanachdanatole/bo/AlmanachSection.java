@@ -16,6 +16,7 @@ public class AlmanachSection
     implements Serializable
 {
 
+  @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
   public static interface AlmanachImage
   {
 
