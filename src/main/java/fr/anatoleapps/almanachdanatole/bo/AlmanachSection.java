@@ -16,7 +16,6 @@ public class AlmanachSection
     implements Serializable
 {
 
-  @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
   public static interface AlmanachImage
   {
 
@@ -172,12 +171,12 @@ public class AlmanachSection
 
     public ALaUneSection()
     {
-      this(null, null, null, null, null);
+      this(null, null, null, null, null, null);
     }
 
-    public ALaUneSection(String title, String text, AlmanachIllustration illustration, List<AlmanachLink> links, Date date)
+    public ALaUneSection(String title, String subTitle, String text, AlmanachIllustration illustration, List<AlmanachLink> links, Date date)
     {
-      super(SectionType.ALaUne, title, text, illustration, links);
+      super(SectionType.ALaUne, title, subTitle, text, illustration, links);
       this.date = date;
     }
 
@@ -189,23 +188,20 @@ public class AlmanachSection
 
     private static final long serialVersionUID = -3455951155936810391L;
 
-    public final String subTitle;
-
     public AnatolesAgendaSection()
     {
       this(null, null, null, null, null);
     }
 
-    public AnatolesAgendaSection(String title, String text, AlmanachIllustration illustration, List<AlmanachLink> links, String subTitle)
+    public AnatolesAgendaSection(String title, String subTitle, String text, AlmanachIllustration illustration, List<AlmanachLink> links)
     {
-      this(SectionType.AnatolesAgenda, title, text, illustration, links, subTitle);
+      this(SectionType.AnatolesAgenda, title, subTitle, text, illustration, links);
     }
 
-    protected AnatolesAgendaSection(SectionType sectionType, String title, String text, AlmanachIllustration illustration, List<AlmanachLink> links,
-        String subTitle)
+    protected AnatolesAgendaSection(SectionType sectionType, String title, String subTitle, String text, AlmanachIllustration illustration,
+        List<AlmanachLink> links)
     {
-      super(sectionType, title, text, illustration, links);
-      this.subTitle = subTitle;
+      super(sectionType, title, subTitle, text, illustration, links);
     }
 
     @Override
@@ -239,9 +235,9 @@ public class AlmanachSection
       this(null, null, null, null, null);
     }
 
-    public AnatolesIdeasSection(String title, String text, AlmanachIllustration illustration, List<AlmanachLink> links, String subTitle)
+    public AnatolesIdeasSection(String title, String subTitle, String text, AlmanachIllustration illustration, List<AlmanachLink> links)
     {
-      super(SectionType.AnatolesIdeas, title, text, illustration, links, subTitle);
+      super(SectionType.AnatolesIdeas, title, subTitle, text, illustration, links);
     }
 
   }
@@ -312,7 +308,7 @@ public class AlmanachSection
 
     public TodaysChallengeSection(List<Challenge> challenges)
     {
-      super(SectionType.TodaysChallenge, null, null, null, null);
+      super(SectionType.TodaysChallenge, null, null, null, null, null);
       this.challenges = challenges;
     }
 
@@ -334,12 +330,12 @@ public class AlmanachSection
 
     public WhosThatPersonSection()
     {
-      this(null, null, null, null, null);
+      this(null, null, null, null, null, null);
     }
 
-    public WhosThatPersonSection(String title, String text, AlmanachIllustration illustration, List<AlmanachLink> links, String answer)
+    public WhosThatPersonSection(String title, String subTitle, String text, AlmanachIllustration illustration, List<AlmanachLink> links, String answer)
     {
-      super(SectionType.WhosThatPerson, title, text, illustration, links);
+      super(SectionType.WhosThatPerson, title, subTitle, text, illustration, links);
       this.answer = answer;
     }
 
@@ -368,24 +364,27 @@ public class AlmanachSection
 
   public final String title;
 
+  public final String subTitle;
+
   public final String text;
 
   public final AlmanachIllustration illustration;
 
   public final List<AlmanachLink> links;
 
-  public AlmanachSection(SectionType sectionType, String title, String text, AlmanachIllustration illustration, List<AlmanachLink> links)
+  public AlmanachSection()
+  {
+    this(null, null, null, null, null, null);
+  }
+
+  public AlmanachSection(SectionType sectionType, String title, String subTitle, String text, AlmanachIllustration illustration, List<AlmanachLink> links)
   {
     this.sectionType = sectionType;
     this.title = title;
+    this.subTitle = subTitle;
     this.text = text;
     this.illustration = illustration;
     this.links = links;
-  }
-
-  public AlmanachSection()
-  {
-    this(null, null, null, null, null);
   }
 
   public final boolean hasDetail()

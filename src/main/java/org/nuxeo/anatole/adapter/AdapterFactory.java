@@ -94,28 +94,20 @@ public class AdapterFactory
         {
           exception.printStackTrace();
         }
-        return new ALaUneSection(title, text, almanachIllustration, links, calendar == null ? null : calendar.getTime());
+        return new ALaUneSection(title, extractSubTitle(document, Constants.ALAUNE_TYPE), text, almanachIllustration, links, calendar == null ? null
+            : calendar.getTime());
       }
       else if (document.getType().equals(Constants.ANATOLE_AT_THE_MARKET_TYPE) == true)
       {
-        return new AlmanachSection(SectionType.AnatoleAtTheMarket, title, text, almanachIllustration, links);
+        return new AlmanachSection(SectionType.AnatoleAtTheMarket, title, extractSubTitle(document, Constants.ANATOLE_AT_THE_MARKET_TYPE), text, almanachIllustration, links);
       }
       else if (document.getType().equals(Constants.ANATOLE_FRANCE_TOUR_TYPE) == true)
       {
-        return new AlmanachSection(SectionType.AnatoleFranceTour, title, text, almanachIllustration, links);
+        return new AlmanachSection(SectionType.AnatoleFranceTour, title, extractSubTitle(document, Constants.ANATOLE_FRANCE_TOUR_TYPE), text, almanachIllustration, links);
       }
       else if (document.getType().equals(Constants.ANATOLES_AGENDA_TYPE) == true)
       {
-        String subTitle = null;
-        try
-        {
-          subTitle = (String) document.getPropertyValue("anatolesAgenda:subTitle");
-        }
-        catch (Exception exception)
-        {
-          exception.printStackTrace();
-        }
-        return new AnatolesAgendaSection(title, text, almanachIllustration, links, subTitle);
+        return new AnatolesAgendaSection(title, extractSubTitle(document, Constants.ANATOLES_AGENDA_TYPE), text, almanachIllustration, links);
       }
       else if (document.getType().equals(Constants.ANATOLES_IDEAS_TYPE) == true)
       {
@@ -128,11 +120,11 @@ public class AdapterFactory
         {
           exception.printStackTrace();
         }
-        return new AnatolesIdeasSection(title, text, almanachIllustration, links, subTitle);
+        return new AnatolesIdeasSection(title, subTitle, text, almanachIllustration, links);
       }
       else if (document.getType().equals(Constants.FREE_SECTION_TYPE) == true)
       {
-        return new AlmanachSection(SectionType.FreeSection, title, text, almanachIllustration, links);
+        return new AlmanachSection(SectionType.FreeSection, title, extractSubTitle(document, Constants.FREE_SECTION_TYPE), text, almanachIllustration, links);
       }
       else if (document.getType().equals(Constants.TODAYS_CHALLENGE_TYPE) == true)
       {
@@ -181,11 +173,11 @@ public class AdapterFactory
       }
       else if (document.getType().equals(Constants.TODAYS_CHALLENGE_TYPE) == true)
       {
-        return new AlmanachSection(SectionType.TodaysChallenge, title, text, almanachIllustration, links);
+        return new AlmanachSection(SectionType.TodaysChallenge, title, extractSubTitle(document, Constants.TODAYS_CHALLENGE_TYPE), text, almanachIllustration, links);
       }
       else if (document.getType().equals(Constants.WHAT_DO_ID_DO_TODAY_TYPE) == true)
       {
-        return new AlmanachSection(SectionType.WhatDoIDoToday, title, text, almanachIllustration, links);
+        return new AlmanachSection(SectionType.WhatDoIDoToday, title, extractSubTitle(document, Constants.WHAT_DO_ID_DO_TODAY_TYPE), text, almanachIllustration, links);
       }
       else if (document.getType().equals(Constants.WHOS_THAT_PERSON_TYPE) == true)
       {
@@ -198,7 +190,7 @@ public class AdapterFactory
         {
           exception.printStackTrace();
         }
-        return new WhosThatPersonSection(title, text, almanachIllustration, links, answer);
+        return new WhosThatPersonSection(title, extractSubTitle(document, Constants.WHOS_THAT_PERSON_TYPE), text, almanachIllustration, links, answer);
       }
     }
 
@@ -277,6 +269,20 @@ public class AdapterFactory
     }
 
     return null;
+  }
+
+  private String extractSubTitle(DocumentModel document, String schemaPrefix)
+  {
+    String subTitle = null;
+    try
+    {
+      subTitle = (String) document.getPropertyValue(schemaPrefix + ":subTitle");
+    }
+    catch (Exception exception)
+    {
+      // That may be totally normal
+    }
+    return subTitle;
   }
 
   // private void extractImageDimensions(AbstractBlob abstractBlob, AtomicInteger illustrationWidth, AtomicInteger illustrationHeight,
